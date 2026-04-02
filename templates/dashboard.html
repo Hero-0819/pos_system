@@ -1,0 +1,58 @@
+<h1>ADMIN DASHBOARD</h1>
+
+<div style="display:flex; gap:20px; margin-bottom:20px;">
+
+    <div style="background:#4CAF50; color:white; padding:20px; border-radius:10px;">
+        <h4>Total Sales</h4>
+        <p>{{ total_sales }}</p>
+    </div>
+
+    <div style="background:#2196F3; color:white; padding:20px; border-radius:10px;">
+        <h4>Number of Sales</h4>
+        <p>{{ number_of_sales }}</p>
+    </div>
+
+    <div style="background:#FF9800; color:white; padding:20px; border-radius:10px;">
+        <h4>Profit</h4>
+        <p>{{ profit }}</p>
+    </div>
+
+</div>
+
+<h2>⚠ Low Stock Products</h2>
+
+{% if low_stock_products %}
+    <ul>
+    {% for p in low_stock_products %}
+        <li style="color:red;">
+            {{ p.name }} - Stock: {{ p.stock }}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p style="color:green;">All stock is okay</p>
+{% endif %}
+
+<hr>
+
+<h2>Recent Sales</h2>
+
+<ul>
+{% for s in recent_sales %}
+    <li>
+        {{ s.invoice_no }} - {{ s.total }}
+    </li>
+{% empty %}
+    <li>No sales yet</li>
+{% endfor %}
+</ul>
+
+<h2>Reports</h2>
+
+<a href="/report/pdf/">
+    <button>Download PDF Report</button>
+</a>
+
+<a href="/report/excel/">
+    <button>Download Excel Report</button>
+</a>

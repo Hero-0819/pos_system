@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>POS SYSTEM</title>
+</head>
+<body>
+
+<h1>POS SYSTEM</h1>
+
+<h2>Products</h2>
+
+<ul>
+    {% for product in products %}
+        <li>
+            {{ product.name }} - {{ product.price }} - Stock: {{ product.stock }}
+            <a href="{% url 'add_to_cart' product.id %}">Add</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h2>Cart</h2>
+
+<ul>
+    {% for item in cart_items %}
+        <li>
+            {{ item.product.name }} - {{ item.qty }} - {{ item.subtotal }}
+        </li>
+    {% endfor %}
+</ul>
+
+<h3>Total: {{ total }}</h3>
+
+<a href="{% url 'checkout' %}">
+    <button>Checkout</button>
+</a>
+
+</body>
+</html>
+

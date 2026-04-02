@@ -1,0 +1,17 @@
+<h2>Receipt #{{ sale.invoice_no }}</h2>
+
+{% for item in receipt %}
+    <p>
+        {{ item.name }} - {{ item.qty }} - {{ item.subtotal }}
+    </p>
+{% empty %}
+    <p>Receipt is empty</p>
+{% endfor %}
+
+<hr>
+
+<h3>Total: {{ total }}</h3>
+<a href="{% url 'download_receipt' sale.id %}">
+    Download PDF
+</a>
+

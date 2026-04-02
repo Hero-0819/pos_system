@@ -1,0 +1,28 @@
+<h1>POS SYSTEM</h1>
+
+<h2>Products</h2>
+
+<ul>
+    {% for product in products %}
+    <li>
+        {{ product.name }} - {{ product.price }} - Stock: {{ product.quantity }}
+        <a href="/add/{{ product.id }}/">Add</a>
+    </li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h2>Cart</h2>
+
+<ul>
+    {% for item in cart %}
+    <li>{{ item.name }} - {{ item.qty }} - {{ item.total }}</li>
+    {% endfor %}
+</ul>
+
+<h3>Total: {{ total }}</h3>
+
+<a href="/checkout/">Checkout</a>
+
+

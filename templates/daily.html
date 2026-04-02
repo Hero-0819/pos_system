@@ -1,0 +1,9 @@
+<h2>Today's Sales</h2>
+
+{% for sale in sales %}
+    <p>{{ sale.invoice_no }} - {{ sale.total }}</p>
+{% empty %}
+    <p>No sales today</p>
+{% endfor %}
+
+<h3>Total Today: {{ total }}</h3>

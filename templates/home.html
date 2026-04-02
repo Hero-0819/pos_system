@@ -1,0 +1,38 @@
+{% for p in products %}
+    <p>
+        {{ p.name }} - {{ p.price }} - Stock: {{ p.stock }}
+
+        {% if p.stock <= p.low_stock_threshold %}
+            <span style="color:red;">LOW STOCK!</span>
+        {% endif %}
+
+        <a href="{% url 'add_to_cart' p.id %}">Add</a>
+    </p>
+{% endfor %}
+
+{% if cart_items %}
+    <ul>
+    {% for item in cart_items %}
+        <li>
+            {{ item.product.name }} 
+            | Qty: {{ item.qty }} 
+            | {{ item.subtotal }}
+
+            <a href="{% url 'remove_from_cart' item.product.id %}">
+                <button style="color:red;">Remove</button>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <br>
+    <a href="{% url 'checkout' %}">
+        <button style="background:green; color:white;">Checkout</button>
+    </a>
+
+{% else %}
+    <p>Cart is empty</p>
+{% endif %}<hr>
+<h2>🛒 Cart</h2>
+
+
