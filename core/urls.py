@@ -12,5 +12,4 @@ urlpatterns = [
     path('report/pdf/', views.daily_sales_pdf, name='daily_sales_pdf'),
     path('report/excel/', views.daily_sales_excel, name='daily_sales_excel'),
     path('remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
-    path('create-admin/', create_admin),
 ]
