@@ -12,14 +12,18 @@ from decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+
 def create_admin(request):
-        User.objects.filter(username="admin").delete()
-        User.objects.create_superuser(
-            username="admin",
-            email="cassianshujaa06@gmail.com",
-            password="admin123"
-        )
-    return HttpResponse("admin ready")
+    User.objects.filter(username="admin").delete()
+
+    User.objects.create_superuser(
+        username="admin",
+        email="cassianshujaa06@gmail.com",
+        password="admin123"
+    )
+
+    return HttpResponse("admin reset success")
+
 def dashboard(request):
     today = timezone.localdate()
 
