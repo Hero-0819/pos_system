@@ -58,25 +58,27 @@ def dashboard(request):
 @login_required
 def home(request):
     products = Product.objects.all()
-    cart = request.session.get('cart', {})
+    cart = request.session.get('cart', {}) or {}
 
     cart_items = []
 
     for product_id, qty in cart.items():
-        product = Product.objects.get(id=product_id)
+        try:
+            product = Product.objects.get(id=product_id)
 
+            cart_items.append({
+                'product': product,
+                'qty': qty,
+                'subtotal': product.price * qty
+            })
 
-        cart_items.append({
-            'product': product,
-            'qty': qty,
-            'subtotal': product.price *qty
-        })
+        except Product.DoesNotExist:
+            continue
 
     return render(request, 'home.html', {
         'products': products,
         'cart_items': cart_items
     })
-
 
 def add_to_cart(request, product_id):
     cart = request.session.get('cart', {})
