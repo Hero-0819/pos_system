@@ -1,38 +1,56 @@
-{% for p in products %}
-    <p>
-        {{ p.name }} - {{ p.price }} - Stock: {{ p.stock }}
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📦 Products</h2>
+
+    {% for p in products %}
+    <div class="card mb-2 p-3">
+        <b>{{ p.name }}</b> - {{ p.price }} TZS  
+        <br>
+        Stock: {{ p.stock }}
 
         {% if p.stock <= p.low_stock_threshold %}
-            <span style="color:red;">LOW STOCK!</span>
+            <span class="text-danger">LOW STOCK!</span>
         {% endif %}
 
-        <a href="{% url 'add_to_cart' p.id %}">Add</a>
-    </p>
-{% endfor %}
-
-{% if cart_items %}
-    <ul>
-    {% for item in cart_items %}
-        <li>
-            {{ item.product.name }} 
-            | Qty: {{ item.qty }} 
-            | {{ item.subtotal }}
-
-            <a href="{% url 'remove_from_cart' item.product.id %}">
-                <button style="color:red;">Remove</button>
-            </a>
-        </li>
+        <a href="{% url 'add_to_cart' p.id %}" class="btn btn-sm btn-primary mt-2">
+            Add to Cart
+        </a>
+    </div>
     {% endfor %}
-    </ul>
 
-    <br>
-    <a href="{% url 'checkout' %}">
-        <button style="background:green; color:white;">Checkout</button>
-    </a>
+    <hr>
 
-{% else %}
-    <p>Cart is empty</p>
-{% endif %}<hr>
-<h2>🛒 Cart</h2>
+    <h3>🛒 Cart</h3>
 
+    {% if cart_items %}
+        <ul class="list-group">
+        {% for item in cart_items %}
+            <li class="list-group-item">
+                <b>{{ item.product.name }}</b>  
+                | Qty: {{ item.qty }}  
+                | {{ item.subtotal }} TZS
+
+                <a href="{% url 'remove_from_cart' item.product.id %}" 
+                   class="btn btn-sm btn-danger float-end">
+                    Remove
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <a href="{% url 'checkout' %}" class="btn btn-success mt-3">
+            Checkout
+        </a>
+
+    {% else %}
+        <p>Cart is empty</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
 

@@ -9,9 +9,15 @@ from django.utils import timezone
 from .models import Sale
 from openpyxl import Workbook
 from decimal import Decimal
-
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+def is_admin(user):
+    return user.is_superuser
+
+def is_cashier(user):
+    return not user.is_superuser
 
 def create_admin(request):
     User.objects.filter(username="admin").delete()
@@ -23,7 +29,8 @@ def create_admin(request):
     )
 
     return HttpResponse("admin reset success")
-
+@login_required
+@user_passes_test(is_admin)
 def dashboard(request):
     today = timezone.localdate()
 
