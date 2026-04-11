@@ -1,56 +1,51 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
-<div class="container mt-4">
+<h3 class="mb-3">📦 Products</h3>
 
-    <h2 class="mb-4">📦 Products</h2>
+<div class="row">
+{% for p in products %}
+    <div class="col-md-4">
+        <div class="card mb-3 p-2 shadow-sm">
+            <b>{{ p.name }}</b>
+            <p>Price: {{ p.price }}</p>
 
-    {% for p in products %}
-    <div class="card mb-2 p-3">
-        <b>{{ p.name }}</b> - {{ p.price }} TZS  
-        <br>
-        Stock: {{ p.stock }}
+            {% if p.stock <= p.low_stock_threshold %}
+                <span class="text-danger">LOW STOCK</span>
+            {% endif %}
 
-        {% if p.stock <= p.low_stock_threshold %}
-            <span class="text-danger">LOW STOCK!</span>
-        {% endif %}
-
-        <a href="{% url 'add_to_cart' p.id %}" class="btn btn-sm btn-primary mt-2">
-            Add to Cart
-        </a>
+            <a href="{% url 'add_to_cart' p.id %}" class="btn btn-sm btn-primary mt-2">
+                Add to Cart
+            </a>
+        </div>
     </div>
-    {% endfor %}
-
-    <hr>
-
-    <h3>🛒 Cart</h3>
-
-    {% if cart_items %}
-        <ul class="list-group">
-        {% for item in cart_items %}
-            <li class="list-group-item">
-                <b>{{ item.product.name }}</b>  
-                | Qty: {{ item.qty }}  
-                | {{ item.subtotal }} TZS
-
-                <a href="{% url 'remove_from_cart' item.product.id %}" 
-                   class="btn btn-sm btn-danger float-end">
-                    Remove
-                </a>
-            </li>
-        {% endfor %}
-        </ul>
-
-        <a href="{% url 'checkout' %}" class="btn btn-success mt-3">
-            Checkout
-        </a>
-
-    {% else %}
-        <p>Cart is empty</p>
-    {% endif %}
-
+{% endfor %}
 </div>
 
-{% endblock %}
+<hr>
 
+<h3>🛒 Cart</h3>
+
+{% if cart_items %}
+    <ul class="list-group">
+    {% for item in cart_items %}
+        <li class="list-group-item">
+            {{ item.product.name }} |
+            Qty: {{ item.qty }} |
+            {{ item.subtotal }}
+
+            <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-sm btn-danger float-end">
+                Remove
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <a href="{% url 'checkout' %}" class="btn btn-success mt-3">
+        Checkout 💰
+    </a>
+{% else %}
+    <p>Cart is empty</p>
+{% endif %}
+
+{% endblock %}
