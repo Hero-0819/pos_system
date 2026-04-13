@@ -66,7 +66,7 @@ def dashboard(request):
 def home(request):
     products = Product.objects.all()
 
-    request.session['cart']={}
+    # request.session['cart']={} || Hii ndio ilikua inaharibu hyo cart kwa sababu inafuta vitu vyote kwenye cart
     cart = request.session.get('cart', {}) or {}
 
     cart_items = []
