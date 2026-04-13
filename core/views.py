@@ -29,6 +29,13 @@ def create_admin(request):
     )
 
     return HttpResponse("admin reset success")
+def create_cashier(request):
+  if not User.objects.filter(username="cashier").exists():
+     User.objects.create_user(
+       username="cashier",
+       password="1234"
+    )
+  return HttpResponse("cashier created")
 @login_required
 @user_passes_test(is_admin)
 def dashboard(request):

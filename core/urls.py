@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from .views import create_admin
+froma.views import create_cashier
 urlpatterns = [
     path('', views.home, name='home'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('report/excel/', views.daily_sales_excel, name='daily_sales_excel'),
     path('remove/<int:product_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('create-admin/', create_admin),
+    path('create-cashier/',create_cashier),
 ]
