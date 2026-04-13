@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block content %}
 <div class="container py-4">
@@ -22,7 +23,7 @@
                             <span class="fw-bold text-primary me-3">#{{ sale.invoice_no }}</span>
                             <span class="text-muted small"><i class="far fa-clock me-1"></i>{{ sale.created_at|date:"M d, Y | H:i" }}</span>
                         </div>
-                        <span class="fw-bold text-dark">${{ sale.total }}</span>
+                        <span class="fw-bold text-dark">{{ sale.total|intcomma }} <small class="text-muted fw-normal">TZS</small></span>
                     </div>
                 </button>
             </h2>
@@ -43,15 +44,15 @@
                                 <tr>
                                     <td class="ps-3 fw-medium text-dark">{{ item.product.name }}</td>
                                     <td class="text-center">{{ item.qty }}</td>
-                                    <td class="text-center text-muted">${{ item.price }}</td>
-                                    <td class="text-end pe-3 fw-bold">${{ item.subtotal }}</td>
+                                    <td class="text-center text-muted">{{ item.price|intcomma }} TZS</td>
+                                    <td class="text-end pe-3 fw-bold">{{ item.subtotal|intcomma }} TZS</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             <tfoot class="table-light">
                                 <tr>
                                     <td colspan="3" class="text-end fw-bold py-2">Grand Total:</td>
-                                    <td class="text-end pe-3 fw-bold text-primary py-2">${{ sale.total }}</td>
+                                    <td class="text-end pe-3 fw-bold text-primary py-2">{{ sale.total|intcomma }} TZS</td>
                                 </tr>
                             </tfoot>
                         </table>
