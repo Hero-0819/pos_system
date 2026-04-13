@@ -65,12 +65,13 @@ def dashboard(request):
 @login_required
 def home(request):
     products = Product.objects.all()
+
+    request.session['cart']={}
     cart = request.session.get('cart', {}) or {}
 
     cart_items = []
 
     for product_id, qty in cart.items():
-        try:
             product = Product.objects.filter(id=product_id).first()
             if product:
                cart_items.append({
@@ -79,8 +80,6 @@ def home(request):
                  'subtotal': product.price * qty
             })
 
-        except:
-            continue
 
     return render(request, 'home.html', {
         'products': products,
