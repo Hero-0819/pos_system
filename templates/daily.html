@@ -1,9 +1,83 @@
-<h2>Today's Sales</h2>
+{% extends 'base.html' %}
 
-{% for sale in sales %}
-    <p>{{ sale.invoice_no }} - {{ sale.total }}</p>
-{% empty %}
-    <p>No sales today</p>
-{% endfor %}
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-dark">
+                <i class="fas fa-calendar-day me-2 text-primary"></i>Today's Sales
+            </h2>
+            <p class="text-muted">Reviewing transactions for {{ "now"|date:"F d, Y" }}</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <div class="card bg-primary text-white shadow-sm d-inline-block p-3 px-5 border-0">
+                <small class="text-uppercase opacity-75 d-block mb-1" style="letter-spacing: 1px;">Daily Total</small>
+                <h3 class="mb-0 fw-bold">${{ total }}</h3>
+            </div>
+        </div>
+    </div>
 
-<h3>Total Today: {{ total }}</h3>
+    <div class="card shadow-sm border-0 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary text-uppercase small fw-bold">
+                        <tr>
+                            <th class="ps-4 py-3">Invoice Number</th>
+                            <th class="py-3">Time</th>
+                            <th class="py-3 text-end pe-4">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                        <tr>
+                            <td class="ps-4 fw-bold">
+                                <span class="text-primary">#{{ sale.invoice_no }}</span>
+                            </td>
+                            <td class="text-muted">
+                                {{ sale.created_at|date:"H:i A" }}
+                            </td>
+                            <td class="text-end pe-4 fw-bold text-dark">
+                                ${{ sale.total }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-receipt fa-3x mb-3 d-block opacity-25"></i>
+                                    <p class="mb-0">No sales have been recorded today.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Cashier
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Professional touches */
+    .table thead th {
+        border-top: none;
+        border-bottom: 2px solid #edf2f7;
+    }
+    .table tbody tr {
+        transition: background-color 0.2s;
+    }
+    .table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+    .bg-primary {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%) !important;
+    }
+</style>
+{% endblock %}
