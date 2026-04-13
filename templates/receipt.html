@@ -1,17 +1,112 @@
-<h2>Receipt #{{ sale.invoice_no }}</h2>
+{% extends 'base.html' %}
 
-{% for item in receipt %}
-    <p>
-        {{ item.name }} - {{ item.qty }} - {{ item.subtotal }}
-    </p>
-{% empty %}
-    <p>Receipt is empty</p>
-{% endfor %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            
+            <div class="card shadow-lg border-0 receipt-paper">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center mb-4">
+                        <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-3">
+                            <i class="fas fa-check fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold text-uppercase mb-1">Sale Confirmed</h4>
+                        <p class="text-muted small">Invoice #{{ sale.invoice_no }}</p>
+                    </div>
 
-<hr>
+                    <div class="d-flex justify-content-between mb-2 small text-muted">
+                        <span>Date:</span>
+                        <span>{{ sale.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4 small text-muted">
+                        <span>Time:</span>
+                        <span>{{ sale.created_at|date:"H:i A" }}</span>
+                    </div>
 
-<h3>Total: {{ total }}</h3>
-<a href="{% url 'download_receipt' sale.id %}">
-    Download PDF
-</a>
+                    <div class="border-top border-2 border-dashed my-4"></div>
 
+                    <div class="receipt-items mb-4">
+                        {% for item in receipt %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ item.name }}</h6>
+                                <small class="text-muted">{{ item.qty }} unit(s) x ${{ item.price }}</small>
+                            </div>
+                            <span class="fw-bold text-dark">${{ item.subtotal }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-center text-muted">No items found</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="border-top border-2 border-dashed my-4"></div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h5 class="fw-bold mb-0">TOTAL AMOUNT</h5>
+                        <h4 class="fw-bold text-primary mb-0">${{ total }}</h4>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'download_receipt' sale.id %}" class="btn btn-danger py-3 fw-bold shadow-sm">
+                            <i class="fas fa-file-pdf me-2"></i> DOWNLOAD PDF RECEIPT
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary py-2 border-0">
+                            <i class="fas fa-plus me-1"></i> New Transaction
+                        </a>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <p class="text-muted small mb-0">Thank you for shopping with us!</p>
+                        <small class="text-uppercase text-light-emphasis" style="letter-spacing: 2px;">Shujaa Store</small>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for the "Paper" Look */
+    .receipt-paper {
+        background-color: #ffffff;
+        border-radius: 0; /* Boxy like a real thermal slip */
+        position: relative;
+    }
+    
+    /* Subtle zig-zag or jagged edge effect if you want to get fancy */
+    .receipt-paper::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: linear-gradient(-45deg, #f8f9fa 5px, transparent 0), 
+                    linear-gradient(45deg, #f8f9fa 5px, transparent 0);
+        background-size: 10px 10px;
+    }
+
+    .border-dashed {
+        border-style: dashed !important;
+        border-color: #dee2e6 !important;
+    }
+
+    .text-light-emphasis {
+        color: #adb5bd !important;
+    }
+
+    /* Transition for buttons */
+    .btn-danger {
+        background-color: #dc3545;
+        transition: all 0.2s ease;
+    }
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}
