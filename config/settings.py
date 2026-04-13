@@ -21,13 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&9ps=$a%4$cdsbg^zmd8fbgr$dvoaoi_=u4jurfpcf$-iw69-n'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS=["pos-system-u3xs.onrender.com"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://pos-system-u3xs.onrender.com"
+]
 
 
 # Application definition
@@ -75,10 +78,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 DATABASES = {
-    'default':dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
+    'default': dj_database_url.parse(
+        os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=not os.environ.get("DEBUG", "True") == "True"
     )
 }
 
@@ -121,4 +124,4 @@ STATIC_URL = 'static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = 'accounts/login/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
