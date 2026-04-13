@@ -71,15 +71,15 @@ def home(request):
 
     for product_id, qty in cart.items():
         try:
-            product = Product.objects.get(id=product_id)
-
-            cart_items.append({
-                'product': product,
-                'qty': qty,
-                'subtotal': product.price * qty
+            product = Product.objects.filter(id=product_id).first()
+            if product:
+               cart_items.append({
+                 'product': product,
+                 'qty': qty,
+                 'subtotal': product.price * qty
             })
 
-        except Product.DoesNotExist:
+        except:
             continue
 
     return render(request, 'home.html', {
