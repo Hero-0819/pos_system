@@ -1,51 +1,145 @@
 {% extends 'base.html' %}
+
 {% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        
+        <div class="col-md-8 border-end">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold"><i class="fas fa-boxes me-2 text-primary"></i>Available Products</h3>
+                <div class="input-group w-50">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" id="productSearch" class="form-control border-start-0" placeholder="Search product name...">
+                </div>
+            </div>
 
-<h3 class="mb-3">📦 Products</h3>
+            <div class="row g-3" id="productGrid" style="max-height: 80vh; overflow-y: auto; padding-bottom: 20px;">
+                {% for p in products %}
+                <div class="col-xl-4 col-lg-6 product-item">
+                    <div class="card h-100 shadow-sm border-0 transition-hover">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <h6 class="fw-bold mb-0 text-truncate" style="max-width: 150px;">{{ p.name }}</h6>
+                                <span class="badge bg-light text-dark border">${{ p.price }}</span>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3">
+                                {% if p.stock <= 5 %}
+                                    <small class="text-danger fw-bold animate-pulse">
+                                        <i class="fas fa-exclamation-circle me-1"></i>Low Stock: {{ p.stock }}
+                                    </small>
+                                {% else %}
+                                    <small class="text-muted">Stock: {{ p.stock }}</small>
+                                {% endif %}
+                            </div>
 
-<div class="row">
-{% for p in products %}
-    <div class="col-md-4">
-        <div class="card mb-3 p-2 shadow-sm">
-            <b>{{ p.name }}</b>
-            <p>Price: {{ p.price }}</p>
-
-            {% if p.stock <= p.low_stock_threshold %}
-                <span class="text-danger">LOW STOCK</span>
-            {% endif %}
-
-            <a href="{% url 'add_to_cart' p.id %}" class="btn btn-sm btn-primary mt-2">
-                Add to Cart
-            </a>
+                            {% if p.stock > 0 %}
+                                <a href="{% url 'add_to_cart' p.id %}" class="btn btn-primary w-100 btn-sm py-2">
+                                    <i class="fas fa-plus me-1"></i> Add to Order
+                                </a>
+                            {% else %}
+                                <button class="btn btn-secondary w-100 btn-sm py-2" disabled>Out of Stock</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="sticky-top" style="top: 20px;">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Current Order</h5>
+                        <span class="badge bg-primary">{{ cart_items|length }} Items</span>
+                    </div>
+                    
+                    <div class="card-body p-0" style="max-height: 50vh; overflow-y: auto;">
+                        {% if cart_items %}
+                            <ul class="list-group list-group-flush">
+                                {% for item in cart_items %}
+                                <li class="list-group-item py-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="me-auto">
+                                            <div class="fw-bold text-dark">{{ item.product.name }}</div>
+                                            <small class="text-muted">${{ item.product.price }} x {{ item.qty }}</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="fw-bold text-primary">${{ item.subtotal }}</div>
+                                            <a href="{% url 'remove_from_cart' item.product.id %}" class="text-danger text-decoration-none small">
+                                                <i class="fas fa-trash-alt"></i> Remove
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-shopping-basket fa-3x text-light mb-3 d-block"></i>
+                                <p class="text-muted">No items in cart</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if cart_items %}
+                    <div class="card-footer bg-white border-top-0 p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="h5 text-muted mb-0">Total:</span>
+                            <span class="h4 fw-bold text-dark mb-0">${{ total }}</span>
+                        </div>
+                        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg w-100 shadow-sm py-3 fw-bold">
+                            COMPLETE SALE <i class="fas fa-chevron-right ms-2"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
-{% endfor %}
 </div>
 
-<hr>
+<style>
+    .transition-hover {
+        transition: all 0.2s ease-in-out;
+    }
+    .transition-hover:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    #productGrid::-webkit-scrollbar {
+        width: 6px;
+    }
+    #productGrid::-webkit-scrollbar-thumb {
+        background-color: #e0e0e0;
+        border-radius: 10px;
+    }
+</style>
 
-<h3>🛒 Cart</h3>
-
-{% if cart_items %}
-    <ul class="list-group">
-    {% for item in cart_items %}
-        <li class="list-group-item">
-            {{ item.product.name }} |
-            Qty: {{ item.qty }} |
-            {{ item.subtotal }}
-
-            <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-sm btn-danger float-end">
-                Remove
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-
-    <a href="{% url 'checkout' %}" class="btn btn-success mt-3">
-        Checkout 💰
-    </a>
-{% else %}
-    <p>Cart is empty</p>
-{% endif %}
-
+<script>
+    // Simple client-side search for the cashier
+    document.getElementById('productSearch').addEventListener('keyup', function() {
+        let value = this.value.toLowerCase();
+        let items = document.querySelectorAll('.product-item');
+        
+        items.forEach(item => {
+            let name = item.querySelector('h6').textContent.toLowerCase();
+            if (name.includes(value)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+</script>
 {% endblock %}
