@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import create_admin
-froma.views import create_cashier
+from.views import create_cashier
 urlpatterns = [
     path('', views.home, name='home'),
     path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
