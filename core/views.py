@@ -70,20 +70,23 @@ def home(request):
     cart = request.session.get('cart', {}) or {}
 
     cart_items = []
+    total_cart_price = 0
 
     for product_id, qty in cart.items():
             product = Product.objects.filter(id=product_id).first()
             if product:
-               cart_items.append({
+                total_cart_price += product.price * qty
+                cart_items.append({
                  'product': product,
                  'qty': qty,
                  'subtotal': product.price * qty
-            })
+                })
 
 
     return render(request, 'home.html', {
         'products': products,
-        'cart_items': cart_items
+        'cart_items': cart_items,
+        'cart_total_price': total_cart_price
     })
 
 def add_to_cart(request, product_id):
