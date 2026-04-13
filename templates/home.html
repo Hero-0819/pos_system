@@ -94,7 +94,7 @@
                     <div class="card-footer bg-light border-top-0 p-4">
                         <div class="d-flex justify-content-between mb-3">
                             <span class="h5 text-muted mb-0">Total:</span>
-                            <span class="h4 fw-bold text-dark mb-0">{{ total|intcomma }} <small class="fs-6 fw-normal">TZS</small></span>
+                            <span class="h4 fw-bold text-dark mb-0">{{ cart_total_price|intcomma }} <small class="fs-6 fw-normal">TZS</small></span>
                         </div>
                         <a href="{% url 'checkout' %}" class="btn btn-success btn-lg w-100 shadow-sm py-3 fw-bold">
                             COMPLETE SALE <i class="fas fa-check-circle ms-2"></i>
